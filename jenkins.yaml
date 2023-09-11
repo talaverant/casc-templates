@@ -1,0 +1,659 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - string:
+          id: "github-cloudbees-guru-token"
+          scope: GLOBAL
+          secret: "{AQAAABAAAAAwwClI+IgLd5famh8S4Kk8uJW5syoGvKGNU4VxWhRVi6rPkFEeQGA+KytseQwUwe2ei9QYHxeifda5zo6KyteIGg==}"
+      - string:
+          description: "Webhook secret for https://github.com/apps/shared-demos-cloudbees-guru"
+          id: "7538229c-6d2b-4a0d-9ff1-c0143eb28af8"
+          scope: SYSTEM
+          secret: "{AQAAABAAAAAwURRGrhhuqEwpGaUoRIWvnH4xeHu7FV1O9n98vQzQdj0Zir6t5t6uqvVRqnPtTjQ2qakp80eyQ2cDeygYoWrjmQ==}"
+      - string:
+          description: "CloudBees Feature Management Application ID"
+          id: "cloudbees-fm"
+          scope: GLOBAL
+          secret: "{AQAAABAAAAAwfmGHVSLosJKhNIULn4cJkFF/YW/jX5ikP6T0j1WJsyrxDvVzVQ1cguzRXiyaGpKulLdkpCAD3F9N7ykdKx30yg==}"
+jenkins:
+  agentProtocols:
+  - "Diagnostic-Ping"
+  - "JNLP4-connect"
+  - "OperationsCenter2"
+  - "Ping"
+  authorizationStrategy: "cloudBeesRoleBasedAccessControl"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  disabledAdministrativeMonitors:
+  - "com.cloudbees.jenkins.support.impl.cloudbees.TcpSlaveAgentListenerMonitor"
+  - "com.cloudbees.jenkins.support.impl.cloudbees.UnrestrictedApiCallsMonitor"
+  - "OldData"
+  labelAtoms:
+  - name: "built-in"
+  - name: "maven"
+  - name: "node"
+  markupFormatter:
+    rawHtml:
+      disableSyntaxHighlighting: false
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  noUsageStatistics: true
+  numExecutors: 0
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  securityRealm: "operationsCenter"
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "core-mm-offline"
+      url: "file:/tmp/jenkins/war/WEB-INF/plugins/update-center.json"
+    - id: "cap-core-mm"
+      url: "https://jenkins-updates.cloudbees.com/update-center/envelope-core-mm/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+cloudbees-pipeline-policies:
+  config:
+    policies:
+    - action: "warning"
+      customMessage: "Never set a manual action or a pause while in an agent during\
+        \ a pipeline run"
+      description: "Never set a manual action or a pause while in an agent during\
+        \ a pipeline run"
+      filter: "demo-pipeline-policies/pause-agent"
+      name: "Agent paused action policy"
+      rules:
+      - "pausedActionInAgentRule"
+    - action: "fail"
+      description: "Need to set a timeout of maximum 5 minutes not to block an agent"
+      filter: "demo-pipeline-policies/pause-timeout"
+      name: "Paused action timeout"
+      rules:
+      - pausedActionTimeoutRule:
+          maxTime: 5
+    - action: "fail"
+      filter: "demo-pipeline-policies/demo-pipeline-policy-timeouts"
+      name: "Set timeouts to pipeline and agents"
+      rules:
+      - agentTimeoutRule:
+          maxTime: 5
+      - entirePipelineTimeoutRule:
+          maxTime: 10
+esr:
+  configuration:
+    enabled: true
+    feederUrl: "https://core.cloudbees.guru/cjoc/feeder"
+    submissionPeriodSeconds: 10
+beekeeper:
+  enabled: true
+  securityWarnings:
+    enabledForCore: true
+    enabledForPlugins: true
+  upgrades:
+    autoDowngradePlugins: false
+    autoUpgradePlugins: false
+notificationConfiguration:
+  enabled: true
+  router: "operationsCenter"
+support:
+  automatedBundleConfiguration:
+    componentIds:
+    - "CloudBeesAssuranceSupport"
+    - "CloudBeesCasCBundlesSupport"
+    - "CloudBeesCasCUpdateLogBundlesSupport"
+    - "AgentsConfigFile"
+    - "ConfigFileComponent"
+    - "OtherConfigFilesComponent"
+    - "AboutBrowser"
+    - "AboutJenkins"
+    - "AboutUser"
+    - "AdministrativeMonitors"
+    - "AgentProtocols"
+    - "BuildQueue"
+    - "CustomLogs"
+    - "DumpExportTable"
+    - "EnvironmentVariables"
+    - "FileDescriptorLimit"
+    - "GCLogs"
+    - "HeapUsageHistogram"
+    - "ItemsContent"
+    - "AgentsJVMProcessSystemMetricsContents"
+    - "MasterJVMProcessSystemMetricsContents"
+    - "JenkinsLogs"
+    - "LoadStats"
+    - "LoggerManager"
+    - "Metrics"
+    - "NetworkInterfaces"
+    - "NodeMonitors"
+    - "OtherLogs"
+    - "ReverseProxy"
+    - "RootCAs"
+    - "RunningBuilds"
+    - "SlaveCommandStatistics"
+    - "SlaveLaunchLogs"
+    - "SlaveLogs"
+    - "AgentsSystemConfiguration"
+    - "MasterSystemConfiguration"
+    - "SystemProperties"
+    - "TaskLogs"
+    - "ThreadDumps"
+    - "UpdateCenter"
+    - "UserCount"
+    - "ComponentImpl"
+    - "SlowRequestComponent"
+    - "HighLoadComponent"
+    - "DeadlockRequestComponent"
+    - "OperationsCenterSupportComponent"
+    - "PipelineTimings"
+    - "PipelineThreadDump"
+    enabled: true
+    period: 1
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+security:
+  anonymizeSupportBundle:
+    enabled: false
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
+  sSHD:
+    port: -1
+  scriptApproval:
+    approvedScriptHashes:
+    - "017d0db438428731cd600b6ebda805065433520f"
+    - "d3edd84f407e122dd781b7623b1b6d8e17c2034c"
+    approvedSignatures:
+    - "method org.jenkinsci.plugins.workflow.steps.FlowInterruptedException getCauses"
+unclassified:
+  artifactManager:
+    artifactManagerFactories:
+    - "jSync"
+  artifactoryBuilder:
+    jfrogInstances:
+    - artifactoryUrl: "http://34.78.191.164:8081/artifactory"
+      bypassProxy: false
+      connectionRetry: 3
+      deployerCredentialsConfig:
+        overridingCredentials: false
+        password: "{AQAAABAAAAAQ/811vj8hssOHjjmJTUJ79e+jBw/p/LjT0lccvpT2pwA=}"
+        username: "****"
+      deploymentThreads: 3
+      instanceId: "Artifactory-fgibelin"
+      timeout: 300
+    jfrogPipelinesServer:
+      bypassProxy: false
+      connectionRetries: 3
+      credentialsConfig:
+        ignoreCredentialPluginDisabled: true
+        overridingCredentials: false
+        password: "{AQAAABAAAAAQAKLgwOKFpaizhVGxU9j0f86frfiq7ipJErIAhz6+NyA=}"
+        username: "****"
+      timeout: 300
+    useCredentialsPlugin: false
+  audit-trail:
+    logBuildCause: true
+    logCredentialsUsage: true
+    pattern: ".*/(?:configSubmit|doDelete|postBuildResult|enable|disable|cancelQueue|stop|toggleLogKeep|doWipeOutWorkspace|createItem|createView|toggleOffline|cancelQuietDown|quietDown|restart|exit|safeExit)/?.*"
+  bitbucketEndpointConfiguration:
+    endpoints:
+    - bitbucketCloudEndpoint:
+        enableCache: false
+        manageHooks: false
+        repositoriesCacheDuration: 0
+        teamCacheDuration: 0
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  cloudBeesSCMReporting:
+    enabled: true
+  cloudbeesPlatform:
+    server:
+      ignoreSslConnectionErrors: true
+    url: "https://flow.cloudbees.guru/"
+  defaultFolderConfiguration:
+    healthMetrics:
+    - worstChildHealthMetric:
+        recursive: true
+    - "averageChildHealthMetric"
+    - jobStatusHealthMetric:
+        countVirginJobs: false
+        failure: true
+        success: true
+        unbuilt: true
+        unstable: true
+    - "projectEnabledHealthMetric"
+  email-ext:
+    adminRequiredForTemplateTesting: false
+    allowUnregisteredEnabled: false
+    charset: "UTF-8"
+    debugMode: false
+    defaultBody: |-
+      $PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+
+      Check console output at $BUILD_URL to view the results.
+    defaultContentType: "text/plain"
+    defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
+    defaultTriggerIds:
+    - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
+    maxAttachmentSize: -1
+    maxAttachmentSizeMb: -1
+    precedenceBulk: false
+    watchingEnabled: false
+  experimentalPlugins:
+    enabled: false
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleForNormalize
+  gitHubPluginConfig:
+    configs:
+    - credentialsId: "github-cloudbees-guru-token"
+      name: "github.com"
+    hookSecretConfigs:
+    - credentialsId: "7538229c-6d2b-4a0d-9ff1-c0143eb28af8"
+    hookUrl: "https://core.cloudbees.guru/shared-demos/github-webhook/"
+  gitSCM:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  globalConfigFiles:
+    configs:
+    - globalMavenSettings:
+        comment: "Global settings"
+        content: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<!--\nLicensed to\
+          \ the Apache Software Foundation (ASF) under one\nor more contributor license\
+          \ agreements.  See the NOTICE file\ndistributed with this work for additional\
+          \ information\nregarding copyright ownership.  The ASF licenses this file\n\
+          to you under the Apache License, Version 2.0 (the\n\"License\"); you may\
+          \ not use this file except in compliance\nwith the License.  You may obtain\
+          \ a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\
+          \nUnless required by applicable law or agreed to in writing,\nsoftware distributed\
+          \ under the License is distributed on an\n\"AS IS\" BASIS, WITHOUT WARRANTIES\
+          \ OR CONDITIONS OF ANY\nKIND, either express or implied.  See the License\
+          \ for the\nspecific language governing permissions and limitations\nunder\
+          \ the License.\n-->\n\n<!--\n | This is the configuration file for Maven.\
+          \ It can be specified at two levels:\n |\n |  1. User Level. This settings.xml\
+          \ file provides configuration for a single user, \n |                 and\
+          \ is normally provided in ^${user.home}/.m2/settings.xml.\n |\n |      \
+          \           NOTE: This location can be overridden with the CLI option:\n\
+          \ |\n |                 -s /path/to/user/settings.xml\n |\n |  2. Global\
+          \ Level. This settings.xml file provides configuration for all Maven\n |\
+          \                 users on a machine (assuming they're all using the same\
+          \ Maven\n |                 installation). It's normally provided in \n\
+          \ |                 ^${maven.home}/conf/settings.xml.\n |\n |          \
+          \       NOTE: This location can be overridden with the CLI option:\n |\n\
+          \ |                 -gs /path/to/global/settings.xml\n |\n | The sections\
+          \ in this sample file are intended to give you a running start at\n | getting\
+          \ the most out of your Maven installation. Where appropriate, the default\n\
+          \ | values (values used when the setting is not specified) are provided.\n\
+          \ |\n |-->\n<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" \n\
+          \          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n  \
+          \        xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\"\
+          >\n  <!-- localRepository\n   | The path to the local repository maven will\
+          \ use to store artifacts.\n   |\n   | Default: ~/.m2/repository\n  <localRepository>/path/to/local/repo</localRepository>\n\
+          \  -->\n  <localRepository>/tmp/cache</localRepository>\n\n  <!-- interactiveMode\n\
+          \   | This will determine whether maven prompts you when it needs input.\
+          \ If set to false,\n   | maven will use a sensible default value, perhaps\
+          \ based on some other setting, for\n   | the parameter in question.\n  \
+          \ |\n   | Default: true\n  <interactiveMode>true</interactiveMode>\n  -->\n\
+          \n  <!-- offline\n   | Determines whether maven should attempt to connect\
+          \ to the network when executing a build.\n   | This will have an effect\
+          \ on artifact downloads, artifact deployment, and others.\n   |\n   | Default:\
+          \ false\n  <offline>false</offline>\n  -->\n\n  <!-- pluginGroups\n   |\
+          \ This is a list of additional group identifiers that will be searched when\
+          \ resolving plugins by their prefix, i.e.\n   | when invoking a command\
+          \ line like \"mvn prefix:goal\". Maven will automatically add the group\
+          \ identifiers\n   | \"org.apache.maven.plugins\" and \"org.codehaus.mojo\"\
+          \ if these are not already contained in the list.\n   |-->\n  <pluginGroups>\n\
+          \    <!-- pluginGroup\n     | Specifies a further group identifier to use\
+          \ for plugin lookup.\n    <pluginGroup>com.your.plugins</pluginGroup>\n\
+          \    -->\n  </pluginGroups>\n\n  <!-- proxies\n   | This is a list of proxies\
+          \ which can be used on this machine to connect to the network.\n   | Unless\
+          \ otherwise specified (by system property or command-line switch), the first\
+          \ proxy\n   | specification in this list marked as active will be used.\n\
+          \   |-->\n  <proxies>\n    <!-- proxy\n     | Specification for one proxy,\
+          \ to be used in connecting to the network.\n     |\n    <proxy>\n      <id>optional</id>\n\
+          \      <active>true</active>\n      <protocol>http</protocol>\n      <username>proxyuser</username>\n\
+          \      <password>proxypass</password>\n      <host>proxy.host.net</host>\n\
+          \      <port>80</port>\n      <nonProxyHosts>local.net|some.host.com</nonProxyHosts>\n\
+          \    </proxy>\n    -->\n  </proxies>\n\n  <!-- servers\n   | This is a list\
+          \ of authentication profiles, keyed by the server-id used within the system.\n\
+          \   | Authentication profiles can be used whenever maven must make a connection\
+          \ to a remote server.\n   |-->\n  <servers>\n    <!-- server\n     | Specifies\
+          \ the authentication information to use when connecting to a particular\
+          \ server, identified by\n     | a unique name within the system (referred\
+          \ to by the 'id' attribute below).\n     | \n     | NOTE: You should either\
+          \ specify username/password OR privateKey/passphrase, since these pairings\
+          \ are \n     |       used together.\n     |\n    <server>\n      <id>deploymentRepo</id>\n\
+          \      <username>repouser</username>\n      <password>repopwd</password>\n\
+          \    </server>\n    -->\n    \n    <!-- Another sample, using keys to authenticate.\n\
+          \    <server>\n      <id>siteServer</id>\n      <privateKey>/path/to/private/key</privateKey>\n\
+          \      <passphrase>optional; leave empty if not used.</passphrase>\n   \
+          \ </server>\n    -->\n   \n  </servers>\n\n  <!-- mirrors\n   | This is\
+          \ a list of mirrors to be used in downloading artifacts from remote repositories.\n\
+          \   | \n   | It works like this: a POM may declare a repository to use in\
+          \ resolving certain artifacts.\n   | However, this repository may have problems\
+          \ with heavy traffic at times, so people have mirrored\n   | it to several\
+          \ places.\n   |\n   | That repository definition will have a unique id,\
+          \ so we can create a mirror reference for that\n   | repository, to be used\
+          \ as an alternate download site. The mirror site will be the preferred \n\
+          \   | server for that repository.\n   |-->\n  <mirrors>\n    <!-- mirror\n\
+          \     | Specifies a repository mirror site to use instead of a given repository.\
+          \ The repository that\n     | this mirror serves has an ID that matches\
+          \ the mirrorOf element of this mirror. IDs are used\n     | for inheritance\
+          \ and direct lookup purposes, and must be unique across the set of mirrors.\n\
+          \     |\n    <mirror>\n      <id>mirrorId</id>\n      <mirrorOf>repositoryId</mirrorOf>\n\
+          \      <name>Human Readable Name for this Mirror.</name>\n      <url>http://my.repository.com/repo/path</url>\n\
+          \    </mirror>\n     -->\n    <mirror>\n      <id>maven-cache-central</id>\n\
+          \      <mirrorOf>*</mirrorOf>\n      <name>CloudBees Guru mirror</name>\n\
+          \      <url>https://nexus.cloudbees.guru:8081/repository/maven-public/</url>\n\
+          \    </mirror>\n    \n  </mirrors>\n  \n  <!-- profiles\n   | This is a\
+          \ list of profiles which can be activated in a variety of ways, and which\
+          \ can modify\n   | the build process. Profiles provided in the settings.xml\
+          \ are intended to provide local machine-\n   | specific paths and repository\
+          \ locations which allow the build to work in the local environment.\n  \
+          \ |\n   | For example, if you have an integration testing plugin - like\
+          \ cactus - that needs to know where\n   | your Tomcat instance is installed,\
+          \ you can provide a variable here such that the variable is \n   | dereferenced\
+          \ during the build process to configure the cactus plugin.\n   |\n   | As\
+          \ noted above, profiles can be activated in a variety of ways. One way -\
+          \ the activeProfiles\n   | section of this document (settings.xml) - will\
+          \ be discussed later. Another way essentially\n   | relies on the detection\
+          \ of a system property, either matching a particular value for the property,\n\
+          \   | or merely testing its existence. Profiles can also be activated by\
+          \ JDK version prefix, where a \n   | value of '1.4' might activate a profile\
+          \ when the build is executed on a JDK version of '1.4.2_07'.\n   | Finally,\
+          \ the list of active profiles can be specified directly from the command\
+          \ line.\n   |\n   | NOTE: For profiles defined in the settings.xml, you\
+          \ are restricted to specifying only artifact\n   |       repositories, plugin\
+          \ repositories, and free-form properties to be used as configuration\n \
+          \  |       variables for plugins in the POM.\n   |\n   |-->\n  <profiles>\n\
+          \    <!-- profile\n     | Specifies a set of introductions to the build\
+          \ process, to be activated using one or more of the\n     | mechanisms described\
+          \ above. For inheritance purposes, and to activate profiles via <activatedProfiles/>\n\
+          \     | or the command line, profiles have to have an ID that is unique.\n\
+          \     |\n     | An encouraged best practice for profile identification is\
+          \ to use a consistent naming convention\n     | for profiles, such as 'env-dev',\
+          \ 'env-test', 'env-production', 'user-jdcasey', 'user-brett', etc.\n   \
+          \  | This will make it more intuitive to understand what the set of introduced\
+          \ profiles is attempting\n     | to accomplish, particularly when you only\
+          \ have a list of profile id's for debug.\n     |\n     | This profile example\
+          \ uses the JDK version to trigger activation, and provides a JDK-specific\
+          \ repo.\n    <profile>\n      <id>jdk-1.4</id>\n\n      <activation>\n \
+          \       <jdk>1.4</jdk>\n      </activation>\n\n      <repositories>\n  \
+          \      <repository>\n          <id>jdk14</id>\n          <name>Repository\
+          \ for JDK 1.4 builds</name>\n          <url>http://www.myhost.com/maven/jdk14</url>\n\
+          \          <layout>default</layout>\n          <snapshotPolicy>always</snapshotPolicy>\n\
+          \        </repository>\n      </repositories>\n    </profile>\n    -->\n\
+          \n    <!--\n     | Here is another profile, activated by the system property\
+          \ 'target-env' with a value of 'dev',\n     | which provides a specific\
+          \ path to the Tomcat instance. To use this, your plugin configuration\n\
+          \     | might hypothetically look like:\n     |\n     | ...\n     | <plugin>\n\
+          \     |   <groupId>org.myco.myplugins</groupId>\n     |   <artifactId>myplugin</artifactId>\n\
+          \     |   \n     |   <configuration>\n     |     <tomcatLocation>^${tomcatPath}</tomcatLocation>\n\
+          \     |   </configuration>\n     | </plugin>\n     | ...\n     |\n     |\
+          \ NOTE: If you just wanted to inject this configuration whenever someone\
+          \ set 'target-env' to\n     |       anything, you could just leave off the\
+          \ <value/> inside the activation-property.\n     |\n    <profile>\n    \
+          \  <id>env-dev</id>\n\n      <activation>\n        <property>\n        \
+          \  <name>target-env</name>\n          <value>dev</value>\n        </property>\n\
+          \      </activation>\n\n      <properties>\n        <tomcatPath>/path/to/tomcat/instance</tomcatPath>\n\
+          \      </properties>\n    </profile>\n    -->\n  </profiles>\n\n  <!-- activeProfiles\n\
+          \   | List of profiles that are active for all builds.\n   |\n  <activeProfiles>\n\
+          \    <activeProfile>alwaysActiveProfile</activeProfile>\n    <activeProfile>anotherAlwaysActiveProfile</activeProfile>\n\
+          \  </activeProfiles>\n  -->\n</settings>\n"
+        id: "4123d3ce-22c2-477d-83d7-623049473250"
+        isReplaceAll: true
+        name: "MavenSettingsWithNexus"
+        providerId: "org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig"
+    - globalMavenSettings:
+        comment: "Global settings"
+        content: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n<!--\nLicensed to\
+          \ the Apache Software Foundation (ASF) under one\nor more contributor license\
+          \ agreements.  See the NOTICE file\ndistributed with this work for additional\
+          \ information\nregarding copyright ownership.  The ASF licenses this file\n\
+          to you under the Apache License, Version 2.0 (the\n\"License\"); you may\
+          \ not use this file except in compliance\nwith the License.  You may obtain\
+          \ a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\
+          \nUnless required by applicable law or agreed to in writing,\nsoftware distributed\
+          \ under the License is distributed on an\n\"AS IS\" BASIS, WITHOUT WARRANTIES\
+          \ OR CONDITIONS OF ANY\nKIND, either express or implied.  See the License\
+          \ for the\nspecific language governing permissions and limitations\nunder\
+          \ the License.\n-->\n\n<!--\n | This is the configuration file for Maven.\
+          \ It can be specified at two levels:\n |\n |  1. User Level. This settings.xml\
+          \ file provides configuration for a single user, \n |                 and\
+          \ is normally provided in ^${user.home}/.m2/settings.xml.\n |\n |      \
+          \           NOTE: This location can be overridden with the CLI option:\n\
+          \ |\n |                 -s /path/to/user/settings.xml\n |\n |  2. Global\
+          \ Level. This settings.xml file provides configuration for all Maven\n |\
+          \                 users on a machine (assuming they're all using the same\
+          \ Maven\n |                 installation). It's normally provided in \n\
+          \ |                 ^${maven.home}/conf/settings.xml.\n |\n |          \
+          \       NOTE: This location can be overridden with the CLI option:\n |\n\
+          \ |                 -gs /path/to/global/settings.xml\n |\n | The sections\
+          \ in this sample file are intended to give you a running start at\n | getting\
+          \ the most out of your Maven installation. Where appropriate, the default\n\
+          \ | values (values used when the setting is not specified) are provided.\n\
+          \ |\n |-->\n<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" \n\
+          \          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n  \
+          \        xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd\"\
+          >\n  <!-- localRepository\n   | The path to the local repository maven will\
+          \ use to store artifacts.\n   |\n   | Default: ~/.m2/repository\n  <localRepository>/path/to/local/repo</localRepository>\n\
+          \  -->\n  <localRepository>/tmp/cache</localRepository>\n  <!-- interactiveMode\n\
+          \   | This will determine whether maven prompts you when it needs input.\
+          \ If set to false,\n   | maven will use a sensible default value, perhaps\
+          \ based on some other setting, for\n   | the parameter in question.\n  \
+          \ |\n   | Default: true\n  <interactiveMode>true</interactiveMode>\n  -->\n\
+          \n  <!-- offline\n   | Determines whether maven should attempt to connect\
+          \ to the network when executing a build.\n   | This will have an effect\
+          \ on artifact downloads, artifact deployment, and others.\n   |\n   | Default:\
+          \ false\n  <offline>false</offline>\n  -->\n\n  <!-- pluginGroups\n   |\
+          \ This is a list of additional group identifiers that will be searched when\
+          \ resolving plugins by their prefix, i.e.\n   | when invoking a command\
+          \ line like \"mvn prefix:goal\". Maven will automatically add the group\
+          \ identifiers\n   | \"org.apache.maven.plugins\" and \"org.codehaus.mojo\"\
+          \ if these are not already contained in the list.\n   |-->\n  <pluginGroups>\n\
+          \    <!-- pluginGroup\n     | Specifies a further group identifier to use\
+          \ for plugin lookup.\n    <pluginGroup>com.your.plugins</pluginGroup>\n\
+          \    -->\n  </pluginGroups>\n\n  <!-- proxies\n   | This is a list of proxies\
+          \ which can be used on this machine to connect to the network.\n   | Unless\
+          \ otherwise specified (by system property or command-line switch), the first\
+          \ proxy\n   | specification in this list marked as active will be used.\n\
+          \   |-->\n  <proxies>\n    <!-- proxy\n     | Specification for one proxy,\
+          \ to be used in connecting to the network.\n     |\n    <proxy>\n      <id>optional</id>\n\
+          \      <active>true</active>\n      <protocol>http</protocol>\n      <username>proxyuser</username>\n\
+          \      <password>proxypass</password>\n      <host>proxy.host.net</host>\n\
+          \      <port>80</port>\n      <nonProxyHosts>local.net|some.host.com</nonProxyHosts>\n\
+          \    </proxy>\n    -->\n  </proxies>\n\n  <!-- servers\n   | This is a list\
+          \ of authentication profiles, keyed by the server-id used within the system.\n\
+          \   | Authentication profiles can be used whenever maven must make a connection\
+          \ to a remote server.\n   |-->\n  <servers>\n    <!-- server\n     | Specifies\
+          \ the authentication information to use when connecting to a particular\
+          \ server, identified by\n     | a unique name within the system (referred\
+          \ to by the 'id' attribute below).\n     | \n     | NOTE: You should either\
+          \ specify username/password OR privateKey/passphrase, since these pairings\
+          \ are \n     |       used together.\n     |\n    <server>\n      <id>deploymentRepo</id>\n\
+          \      <username>repouser</username>\n      <password>repopwd</password>\n\
+          \    </server>\n    -->\n    \n    <!-- Another sample, using keys to authenticate.\n\
+          \    <server>\n      <id>siteServer</id>\n      <privateKey>/path/to/private/key</privateKey>\n\
+          \      <passphrase>optional; leave empty if not used.</passphrase>\n   \
+          \ </server>\n    -->\n  </servers>\n\n  <!-- mirrors\n   | This is a list\
+          \ of mirrors to be used in downloading artifacts from remote repositories.\n\
+          \   | \n   | It works like this: a POM may declare a repository to use in\
+          \ resolving certain artifacts.\n   | However, this repository may have problems\
+          \ with heavy traffic at times, so people have mirrored\n   | it to several\
+          \ places.\n   |\n   | That repository definition will have a unique id,\
+          \ so we can create a mirror reference for that\n   | repository, to be used\
+          \ as an alternate download site. The mirror site will be the preferred \n\
+          \   | server for that repository.\n   |-->\n  <mirrors>\n    <!-- mirror\n\
+          \     | Specifies a repository mirror site to use instead of a given repository.\
+          \ The repository that\n     | this mirror serves has an ID that matches\
+          \ the mirrorOf element of this mirror. IDs are used\n     | for inheritance\
+          \ and direct lookup purposes, and must be unique across the set of mirrors.\n\
+          \     |\n    <mirror>\n      <id>mirrorId</id>\n      <mirrorOf>repositoryId</mirrorOf>\n\
+          \      <name>Human Readable Name for this Mirror.</name>\n      <url>http://my.repository.com/repo/path</url>\n\
+          \    </mirror>\n     -->\n    <mirror>\n      <id>maven-cache-central</id>\n\
+          \      <mirrorOf>central</mirrorOf>\n      <name>CloudBees Guru mirror</name>\n\
+          \      <url>https://nexus.cloudbees.guru:8081/repository/maven-public/</url>\n\
+          \    </mirror>\n  </mirrors>\n  \n  <!-- profiles\n   | This is a list of\
+          \ profiles which can be activated in a variety of ways, and which can modify\n\
+          \   | the build process. Profiles provided in the settings.xml are intended\
+          \ to provide local machine-\n   | specific paths and repository locations\
+          \ which allow the build to work in the local environment.\n   |\n   | For\
+          \ example, if you have an integration testing plugin - like cactus - that\
+          \ needs to know where\n   | your Tomcat instance is installed, you can provide\
+          \ a variable here such that the variable is \n   | dereferenced during the\
+          \ build process to configure the cactus plugin.\n   |\n   | As noted above,\
+          \ profiles can be activated in a variety of ways. One way - the activeProfiles\n\
+          \   | section of this document (settings.xml) - will be discussed later.\
+          \ Another way essentially\n   | relies on the detection of a system property,\
+          \ either matching a particular value for the property,\n   | or merely testing\
+          \ its existence. Profiles can also be activated by JDK version prefix, where\
+          \ a \n   | value of '1.4' might activate a profile when the build is executed\
+          \ on a JDK version of '1.4.2_07'.\n   | Finally, the list of active profiles\
+          \ can be specified directly from the command line.\n   |\n   | NOTE: For\
+          \ profiles defined in the settings.xml, you are restricted to specifying\
+          \ only artifact\n   |       repositories, plugin repositories, and free-form\
+          \ properties to be used as configuration\n   |       variables for plugins\
+          \ in the POM.\n   |\n   |-->\n  <profiles>\n    <!-- profile\n     | Specifies\
+          \ a set of introductions to the build process, to be activated using one\
+          \ or more of the\n     | mechanisms described above. For inheritance purposes,\
+          \ and to activate profiles via <activatedProfiles/>\n     | or the command\
+          \ line, profiles have to have an ID that is unique.\n     |\n     | An encouraged\
+          \ best practice for profile identification is to use a consistent naming\
+          \ convention\n     | for profiles, such as 'env-dev', 'env-test', 'env-production',\
+          \ 'user-jdcasey', 'user-brett', etc.\n     | This will make it more intuitive\
+          \ to understand what the set of introduced profiles is attempting\n    \
+          \ | to accomplish, particularly when you only have a list of profile id's\
+          \ for debug.\n     |\n     | This profile example uses the JDK version to\
+          \ trigger activation, and provides a JDK-specific repo.\n    <profile>\n\
+          \      <id>jdk-1.4</id>\n\n      <activation>\n        <jdk>1.4</jdk>\n\
+          \      </activation>\n\n      <repositories>\n        <repository>\n   \
+          \       <id>jdk14</id>\n          <name>Repository for JDK 1.4 builds</name>\n\
+          \          <url>http://www.myhost.com/maven/jdk14</url>\n          <layout>default</layout>\n\
+          \          <snapshotPolicy>always</snapshotPolicy>\n        </repository>\n\
+          \      </repositories>\n    </profile>\n    -->\n\n    <!--\n     | Here\
+          \ is another profile, activated by the system property 'target-env' with\
+          \ a value of 'dev',\n     | which provides a specific path to the Tomcat\
+          \ instance. To use this, your plugin configuration\n     | might hypothetically\
+          \ look like:\n     |\n     | ...\n     | <plugin>\n     |   <groupId>org.myco.myplugins</groupId>\n\
+          \     |   <artifactId>myplugin</artifactId>\n     |   \n     |   <configuration>\n\
+          \     |     <tomcatLocation>^${tomcatPath}</tomcatLocation>\n     |   </configuration>\n\
+          \     | </plugin>\n     | ...\n     |\n     | NOTE: If you just wanted to\
+          \ inject this configuration whenever someone set 'target-env' to\n     |\
+          \       anything, you could just leave off the <value/> inside the activation-property.\n\
+          \     |\n    <profile>\n      <id>env-dev</id>\n\n      <activation>\n \
+          \       <property>\n          <name>target-env</name>\n          <value>dev</value>\n\
+          \        </property>\n      </activation>\n\n      <properties>\n      \
+          \  <tomcatPath>/path/to/tomcat/instance</tomcatPath>\n      </properties>\n\
+          \    </profile>\n    -->\n  </profiles>\n\n  <!-- activeProfiles\n   | List\
+          \ of profiles that are active for all builds.\n   |\n  <activeProfiles>\n\
+          \    <activeProfile>alwaysActiveProfile</activeProfile>\n    <activeProfile>anotherAlwaysActiveProfile</activeProfile>\n\
+          \  </activeProfiles>\n  -->\n</settings>\n"
+        id: "8b13860a-f881-47c0-81bf-4192e70fc34d"
+        isReplaceAll: true
+        name: "MyGlobalSettings"
+        providerId: "org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig"
+    - npm:
+        comment: ".npmrc configuration file to use Nexus registry"
+        content: |-
+          registry=https://nexus.cloudbees.guru:8081/repository/npm-group/
+          //nexus.cloudbees.guru:8081/repository/npm-group/:_authToken=NpmToken.8e391a83-cc11-3e47-8690-8a32f48880f4
+          //nexus.cloudbees.guru:8081/repository/npm-local/:_authToken=NpmToken.8e391a83-cc11-3e47-8690-8a32f48880f4
+        id: "npmrc"
+        name: "npmrc"
+        providerId: "jenkins.plugins.nodejs.configfiles.NPMConfig"
+  globalNexusConfiguration:
+    instanceId: "16988916a02f488a8107124dc0644f8f"
+    nxrmConfigs:
+    - nxrm3Configuration:
+        credentialsId: "nexus"
+        displayName: "Nexus CloudBees Guru"
+        id: "Nexus_CloudBees_Guru"
+        internalId: "0c3bc42a-833a-4fe9-b9a5-ea8557d78d09"
+        serverUrl: "https://nexus.cloudbees.guru:8081/"
+  hibernationConfiguration:
+    activities:
+    - "build"
+    - "web"
+    enabled: true
+    gracePeriod: 3600
+  ivyBuildTrigger:
+    extendedVersionMatching: false
+  jiraStepsConfig:
+    sites:
+    - loginType: "BASIC"
+      name: "Jira cbdemo"
+      password: "{AQAAABAAAAAgDW2qW8QgCSa+phuKNZSS4Ad49pXVmMjrBUJhU02IwNI8dQsL3OCsPL9kfWLr/DhG}"
+      readTimeout: 10000
+      secret: "{AQAAABAAAAAQHqCdHKpGA72nHDBkTMwTzibeV6hThktXdLcd1fNYOD0=}"
+      timeout: 10000
+      token: "{AQAAABAAAAAQzHG4D3WOOPVMBXHFclzZNHdJwobV/ijRAlDk+7x0oEI=}"
+      url: "https://cbdemo.atlassian.net"
+      userName: "fgibelin@cloudbees.com"
+  junitTestResultStorage:
+    storage: "file"
+  locale:
+    ignoreAcceptLanguage: true
+    systemLocale: "en_US"
+  location:
+    adminAddress: "address not configured yet <nobody@nowhere>"
+    url: "https://core.cloudbees.guru/shared-demos/"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  mavenModuleSet:
+    localRepository: "default"
+  pollSCM:
+    pollingThreadCount: 10
+  serviceNowEndpoint:
+    timeout: 10
+  sonarGlobalConfiguration:
+    buildWrapperEnabled: true
+    installations:
+    - credentialsId: "sonar.login"
+      name: "SonarQube CloudBees Guru"
+      serverUrl: "https://sonar.cloudbees.guru:9000"
+      triggers:
+        skipScmCause: false
+        skipUpstreamCause: false
+  usageStatisticsCloudBees:
+    disabledJenkinsUsageStatistics: true
+    usageStatisticsCollected: true
+tool:
+  cloudbeesPluginUsageAnalyzer:
+    enabled: true
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard"
+  pipelineMaven:
+    triggerDownstreamUponResultAborted: false
+    triggerDownstreamUponResultFailure: false
+    triggerDownstreamUponResultNotBuilt: false
+    triggerDownstreamUponResultSuccess: true
+    triggerDownstreamUponResultUnstable: false

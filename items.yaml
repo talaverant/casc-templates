@@ -1,0 +1,703 @@
+removeStrategy:
+  rbac: SYNC
+  items: NONE
+items:
+- kind: folder
+  name: cd-examples-library
+  description: CloudBees CD examples
+  displayName: cd-examples-library
+  healthMetrics:
+  - worstChildHealthMetric:
+      recursive: true
+  - averageChildHealthMetric: {}
+  - jobStatusHealthMetric:
+      unstable: true
+      countVirginJobs: false
+      failure: true
+      success: true
+      unbuilt: true
+  - projectEnabledHealthMetric: {}
+  items:
+  - kind: freeStyle
+    name: job-triggers-cd-release
+    blockBuildWhenDownstreamBuilding: false
+    blockBuildWhenUpstreamBuilding: false
+    concurrentBuild: false
+    description: ''
+    disabled: false
+    displayName: job-triggers-cd-release
+    label: node
+    publishersList:
+    - cloudBeesFlowTriggerRelease:
+        startingStage: Post Build
+        configuration: CloudBees Guru CD
+        releaseName: Triggered by Jenkins
+        projectName: Examples Library
+        parameters: '{"release":{"releaseName":"Triggered by Jenkins","stages":[{"stageName":"Post
+          Build","stageValue":""}],"pipelineName":"pipeline_Triggered by Jenkins","parameters":[]}}'
+    scm:
+      none: {}
+    scmCheckoutStrategy:
+      standard: {}
+  - kind: pipeline
+    name: pipeline-triggers-cd-release
+    concurrentBuild: true
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: "pipeline {\n    agent { label 'node' }\n    stages {\n        stage('Build')\
+          \ { \n            steps {\n                echo 'This is the build stage'\n\
+          \            }\n        }\n        stage('Test') { \n            steps {\n\
+          \                echo 'This is the test stage'\n            }\n        }\n\
+          \        stage('Handover to CloudBees CD') { \n            steps {\n   \
+          \             echo 'This is the Handover to CloudBees CD stage'\n      \
+          \          cloudBeesFlowTriggerRelease configuration: 'CloudBees Guru CD',\
+          \ parameters: '{\"release\":{\"releaseName\":\"Triggered by Jenkins\",\"\
+          stages\":[{\"stageName\":\"Post Build\",\"stageValue\":false}],\"pipelineName\"\
+          :\"pipeline_Triggered by Jenkins\",\"parameters\":[]}}', projectName: 'Examples\
+          \ Library', releaseName: 'Triggered by Jenkins', startingStage: 'Post Build'\n\
+          \            }\n        }\n    }\n}\n"
+    description: ''
+    disabled: false
+    displayName: pipeline-triggers-cd-release
+    properties:
+    - jiraProjectProperty: {}
+    resumeBlocked: false
+  - kind: pipeline
+    name: pipeline-triggers-cd-release-on-preview
+    concurrentBuild: true
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: "pipeline {\n    agent { label 'node' }\n    stages {\n        stage('Build')\
+          \ { \n            steps {\n                echo 'This is the build stage'\n\
+          \            }\n        }\n        stage('Test') { \n            steps {\n\
+          \                echo 'This is the test stage'\n            }\n        }\n\
+          \        stage('Handover to CloudBees CD') { \n            steps {\n   \
+          \             echo 'This is the Handover to CloudBees CD stage'\n      \
+          \          cloudBeesFlowTriggerRelease configuration: 'CloudBees Guru CD\
+          \ Preview', parameters: '{\"release\":{\"releaseName\":\"Triggered by Jenkins\"\
+          ,\"stages\":[{\"stageName\":\"Post Build\",\"stageValue\":false}],\"pipelineName\"\
+          :\"pipeline_Triggered by Jenkins\",\"parameters\":[]}}', projectName: 'Examples\
+          \ Library', releaseName: 'Triggered by Jenkins', startingStage: 'Post Build'\n\
+          \            }\n        }\n    }\n}\n"
+    description: ''
+    disabled: false
+    displayName: pipeline-triggers-cd-release-on-preview
+    properties:
+    - jiraProjectProperty: {}
+    resumeBlocked: false
+  properties:
+  - pipeline-model-docker:
+      registry:
+        dockerRegistryEndpoint: {}
+      dockerLabel: ''
+  - envVars: {}
+  - mavenConfigFolderOverrideProperty:
+      override: false
+  - itemRestrictions:
+      filter: false
+- kind: multibranch
+  name: jpetstore
+  description: A web application built on top of MyBatis 3, Spring 3 and Stripes
+  displayName: jpetstore
+  healthMetrics:
+  - worstChildHealthMetric:
+      recursive: true
+  - averageChildHealthMetric: {}
+  - jobStatusHealthMetric:
+      unstable: true
+      countVirginJobs: false
+      failure: true
+      success: true
+      unbuilt: true
+  - projectEnabledHealthMetric: {}
+  orphanedItemStrategy:
+    defaultOrphanedItemStrategy:
+      pruneDeadBranches: true
+      daysToKeep: 5
+      numToKeep: -1
+      abortBuilds: false
+  projectFactory:
+    workflowBranchProjectFactory:
+      scriptPath: Jenkinsfile
+  sourcesList:
+  - branchSource:
+      source:
+        github:
+          apiUri: https://api.github.com
+          traits:
+          - gitHubBranchDiscovery:
+              strategyId: 1
+          - gitHubPullRequestDiscovery:
+              strategyId: 1
+          - gitHubForkDiscovery:
+              trust:
+                gitHubTrustPermissions: {}
+              strategyId: 1
+          repoOwner: cloudbees-guru
+          credentialsId: github-cloudbees-guru
+          id: dc08182e-f0e7-4031-9192-69b499ffacb6
+          repository: jpetstore
+          configuredByUrl: true
+          repositoryUrl: https://github.com/cloudbees-guru/jpetstore/
+      strategy:
+        allBranchesSame: {}
+- kind: folder
+  name: spring-petclinic
+  description: ''
+  displayName: spring-petclinic
+  healthMetrics:
+  - worstChildHealthMetric:
+      recursive: true
+  - averageChildHealthMetric: {}
+  - jobStatusHealthMetric:
+      unstable: true
+      countVirginJobs: false
+      failure: true
+      success: true
+      unbuilt: true
+  - projectEnabledHealthMetric: {}
+  items:
+  - kind: pipeline
+    name: Deploy Petclinic
+    concurrentBuild: true
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: "pipeline {\n    agent none\n    stages {\n        stage(\"Deploy\
+          \ Petclinic\") {\n            steps {\n                echo \"Deploy Petclinic\
+          \ version \" + params.petclinicVersion + \" to environment \" + params.petclinicEnvironment\n\
+          \            }\n        }\n    }\n    \n}"
+    description: ''
+    disabled: false
+    displayName: Deploy Petclinic
+    properties:
+    - jiraProjectProperty: {}
+    - parameters:
+        parameterDefinitions:
+        - string:
+            trim: false
+            name: petclinicVersion
+            description: Version of Petclinic to be deployed
+        - string:
+            trim: false
+            name: petclinicEnvironment
+            description: Environment where Petclinic will be deployed
+    resumeBlocked: false
+  - kind: multibranch
+    name: spring-petclinic-angular
+    description: Angular 8 version of the Spring Petclinic sample application (frontend)
+    displayName: spring-petclinic-angular
+    healthMetrics:
+    - worstChildHealthMetric:
+        recursive: true
+    - averageChildHealthMetric: {}
+    - jobStatusHealthMetric:
+        unstable: true
+        countVirginJobs: false
+        failure: true
+        success: true
+        unbuilt: true
+    - projectEnabledHealthMetric: {}
+    orphanedItemStrategy:
+      defaultOrphanedItemStrategy:
+        pruneDeadBranches: true
+        daysToKeep: -1
+        numToKeep: -1
+        abortBuilds: false
+    projectFactory:
+      customBranchProjectFactory:
+        marker: package.json
+        definition:
+          cpsFlowDefinition:
+            sandbox: true
+            script: "pipeline {\n    \n    agent { label 'node' }\n    stages {\n\
+              \        stage('Build') {\n            steps {\n                withNPM(npmrcConfig:\
+              \ 'npmrc') {\n                    container('node') {\n            \
+              \            \n                        sh 'npm i -g node-gyp'\n    \
+              \                    sh 'npm install'\n                    }\n     \
+              \           }\n            }\n        }\n        stage ('SonarQube')\
+              \ {\n            steps {\n                container('sonar') {\n   \
+              \                 withSonarQubeEnv('SonarQube CloudBees Guru') {\n \
+              \                       sh \"/opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=spring-petclinic-angular\"\
+              \n                    }\n                }\n            }\n        }\n\
+              \        stage ('Publish to Nexus') {\n            steps {\n       \
+              \         container('node') {\n                    sh 'npm publish --registry=https://nexus.cloudbees.guru:8081/repository/npm-local/'\n\
+              \                }\n            }\n        }\n        stage('Feature\
+              \ Management') {\n            steps {\n                featureManagementConfig\
+              \ applicationIdAndName: '615c016ca7889d30e27333ad::Petclinic',\n   \
+              \                                     credentialsId: 'CBFM-fgibelin',\n\
+              \                                        environmentIdAndName: '615c016ca7889d07157333b0::Production'\n\
+              \            }\n        }\n    }\n}"
+    properties:
+    - pipeline-model-docker:
+        registry:
+          dockerRegistryEndpoint: {}
+        dockerLabel: ''
+    - envVars: {}
+    - mavenConfigFolderOverrideProperty:
+        override: false
+    sourcesList:
+    - branchSource:
+        source:
+          github:
+            apiUri: https://api.github.com
+            traits:
+            - gitHubBranchDiscovery:
+                strategyId: 1
+            - gitHubPullRequestDiscovery:
+                strategyId: 1
+            - gitHubForkDiscovery:
+                trust:
+                  gitHubTrustPermissions: {}
+                strategyId: 1
+            - headWildcardFilter:
+                excludes: dependabot/* security
+                includes: '*'
+            repoOwner: cloudbees-guru
+            credentialsId: github-cloudbees-guru
+            id: 3653f1ab-c563-4424-9c1e-7b9268ec5d43
+            repository: spring-petclinic-angular
+            configuredByUrl: true
+            repositoryUrl: https://github.com/cloudbees-guru/spring-petclinic-angular
+        strategy:
+          allBranchesSame: {}
+  - kind: pipeline
+    name: spring-petclinic-deployment-pipeline
+    concurrentBuild: true
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: "pipeline {\n\n    options {\n        buildDiscarder(logRotator(numToKeepStr:\
+          \ '10'))\n        skipDefaultCheckout true\n    }\n\n    agent { label 'maven'\
+          \ }\n\n    environment {\n        NEXUS_INSTANCE = \"Nexus_CloudBees_Guru\"\
+          \n        NEXUS_REPOSITORY = \"shared-demos\"\n        CBFM_PETCLINIC_APPID\
+          \ = \"$CBFM_PETCLINIC_APPID\"\n    }\n\n    stages {\n        stage('Run\
+          \ maven') {\n        steps {\n            git(url:'https://github.com/cloudbees-guru/spring-petclinic',\
+          \ branch: 'main', credentialsId: 'github-cloudbees-guru')\n            container('maven')\
+          \ {\n                withMaven(\n                    mavenSettingsConfig:\
+          \ '4123d3ce-22c2-477d-83d7-623049473250',\n                    options:\
+          \ [junitPublisher(disabled: true, healthScaleFactor: 1.0)],\n          \
+          \          publisherStrategy: 'EXPLICIT') {\n                        sh\
+          \ 'mvn clean verify'\n                    }\n                }\n       \
+          \     }\n        }\n        stage('SonarQube analysis') {\n          steps\
+          \ {\n              container('maven') {\n                withSonarQubeEnv('SonarQube\
+          \ CloudBees Guru') {\n                  withMaven(\n                   \
+          \         mavenSettingsConfig: '4123d3ce-22c2-477d-83d7-623049473250',\n\
+          \                            options: [junitPublisher(disabled: true, healthScaleFactor:\
+          \ 1.0)],\n                            publisherStrategy: 'EXPLICIT') {\n\
+          \                    sh 'mvn sonar:sonar'\n                  }\n       \
+          \         }\n              }\n          }\n        }\n        stage('Publish\
+          \ to Nexus') {\n            steps {\n                container('maven')\
+          \ {\n                    script {\n                        pom = readMavenPom\
+          \ file: \"pom.xml\";\n                        filesByGlob = findFiles(glob:\
+          \ \"target/*.${pom.packaging}\");\n                        // Extract the\
+          \ path from the File found\n                        artifactPath = filesByGlob[0].path;\n\
+          \                        // Assign to a boolean response verifying If the\
+          \ artifact name exists\n                        artifactExists = fileExists\
+          \ artifactPath;\n                        \n                        if(artifactExists)\
+          \ {\n                            nexusPublisher  nexusInstanceId: NEXUS_INSTANCE,\n\
+          \                                            nexusRepositoryId: NEXUS_REPOSITORY,\n\
+          \                                            packages: [[$class: 'MavenPackage',\
+          \ mavenAssetList: [[classifier: '', extension: '', filePath: artifactPath]],\n\
+          \                                            mavenCoordinate: [artifactId:\
+          \ pom.artifactId, groupId: pom.groupId, packaging: pom.packaging, version:\
+          \ pom.version]]];\n                        } else {\n                  \
+          \          error \"*** File: ${artifactPath}, could not be found\";\n  \
+          \                      }\n                    }\n                }\n   \
+          \         }\n        }\n        stage('Update versions in CloudBees CD')\
+          \ {\n            steps {\n                cloudBeesFlowRunProcedure configuration:\
+          \ 'CloudBees Guru CD',\n                                          procedureName:\
+          \ 'Import Petclinic versions from Nexus',\n                            \
+          \              projectName: 'Petclinic'\n            }\n        }\n    \
+          \    stage(\"Deploy to Integration\") {\n            steps {\n         \
+          \       cloudBeesFlowDeployApplication  applicationName: 'Petclinic via\
+          \ CloudBees CI',\n                                                applicationProcessName:\
+          \ 'Deploy via CloudBees CI',\n                                         \
+          \       configuration: 'CloudBees Guru CD',\n                          \
+          \                      deployParameters: '{\"runProcess\":{\"applicationName\"\
+          :\"Petclinic via CloudBees CI\",\"applicationProcessName\":\"Deploy via\
+          \ CloudBees CI\",\"parameter\":\"[{\\\\\"actualParameterName\\\\\": \\\\\
+          \"petclinicVersion\\\\\", \\\\\"value\\\\\": \\\\\"2.6.0-SNAPSHOT\\\\\"\
+          }, {\\\\\"actualParameterName\\\\\":\\\\\"ec_smartDeployOption\\\\\",\\\\\
+          \"value\\\\\":\\\\\"0\\\\\"}]\"}}',\n                                  \
+          \              environmentName: 'Integration',\n                       \
+          \                         environmentProjectName: 'Petclinic',\n       \
+          \                                         projectName: 'Petclinic',\n  \
+          \                                              runAndWaitOption: [throwExceptionIfFailed:\
+          \ true]\n            }\n        }\n        stage('Trigger CloudBees CD pipeline')\
+          \ {\n            steps {\n                cloudBeesFlowTriggerRelease configuration:\
+          \ 'CloudBees Guru CD',\n                                            parameters:\
+          \ '{\"release\":{\"releaseName\":\"Petclinic - 2.6.0-SNAPSHOT\",\"stages\"\
+          :[{\"stageName\": \"Development\", \"stageValue\": true}, {\"stageName\"\
+          : \"Integration\", \"stageValue\": false}, {\"stageName\": \"PreProduction\"\
+          , \"stageValue\": false}, {\"stageName\": \"Production\", \"stageValue\"\
+          : false}, {\"stageName\": \"UAT\", \"stageValue\": false}],\"parameters\"\
+          :[]}}',\n                                            projectName: 'Petclinic',\n\
+          \                                            releaseName: 'Petclinic - 2.6.0-SNAPSHOT'\n\
+          \            }\n        }\n        stage('Feature flag usage check') {\n\
+          \            steps {\n                featureManagementConfig applicationIdAndName:\
+          \ \"${env.CBFM_PETCLINIC_APPID}::Petclinic\",\n                        \
+          \                credentialsId: 'CBFM-fgibelin',\n                     \
+          \                   environmentIdAndName: \"${env.CBFM_PETCLINIC_PRODUCTION}::Production\"\
+          \n            }\n        }\n    }\n\n    post {\n        always {\n    \
+          \        junit 'target/surefire-reports/**/*.xml'\n        }\n    }\n}"
+    description: ''
+    disabled: false
+    displayName: spring-petclinic-deployment-pipeline
+    properties:
+    - jiraProjectProperty: {}
+    - buildDiscarder:
+        strategy:
+          logRotator:
+            artifactDaysToKeep: -1
+            artifactNumToKeep: -1
+            daysToKeep: -1
+            numToKeep: 10
+    resumeBlocked: false
+  - kind: pipeline
+    name: spring-petclinic-master-branch
+    concurrentBuild: true
+    definition:
+      cpsFlowDefinition:
+        sandbox: true
+        script: "pipeline {\n\n    options {\n        buildDiscarder(logRotator(numToKeepStr:\
+          \ '10'))\n        skipDefaultCheckout true\n    }\n\n    agent { label 'maven'\
+          \ }\n\n    environment {\n        NEXUS_INSTANCE = \"Nexus_CloudBees_Guru\"\
+          \n        NEXUS_REPOSITORY = \"shared-demos\"\n        CBFM_PETCLINIC_APPID\
+          \ = \"$CBFM_PETCLINIC_APPID\"\n    }\n    \n    parameters {\n        booleanParam(name:\
+          \ 'artifactory', defaultValue: false, description: 'Deploy to Artifactory')\n\
+          \    }\n\n    stages {\n        stage('Run maven') {\n        steps {\n\
+          \            git(url:'https://github.com/cloudbees-guru/spring-petclinic',\
+          \ branch: 'main', credentialsId: 'github-cloudbees-guru')\n            container('maven')\
+          \ {\n                withMaven(\n                    mavenSettingsConfig:\
+          \ '4123d3ce-22c2-477d-83d7-623049473250',\n                    options:\
+          \ [junitPublisher(disabled: true, healthScaleFactor: 1.0)],\n          \
+          \          publisherStrategy: 'EXPLICIT') {\n                        sh\
+          \ 'mvn clean verify'\n                    }\n                }\n       \
+          \     }\n        }\n        stage('SonarQube analysis') {\n          steps\
+          \ {\n              container('maven') {\n                withSonarQubeEnv('SonarQube\
+          \ CloudBees Guru') {\n                  withMaven(\n                   \
+          \         mavenSettingsConfig: '4123d3ce-22c2-477d-83d7-623049473250',\n\
+          \                            options: [junitPublisher(disabled: true, healthScaleFactor:\
+          \ 1.0)],\n                            publisherStrategy: 'EXPLICIT') {\n\
+          \                    sh 'mvn sonar:sonar'\n                  }\n       \
+          \         }\n              }\n          }\n        }\n        stage('Publish\
+          \ artifacts') {\n            parallel {\n                stage('Publish\
+          \ to Nexus') {\n                    steps {\n                        container('maven')\
+          \ {\n                            script {\n                            \
+          \    pom = readMavenPom file: \"pom.xml\";\n                           \
+          \     filesByGlob = findFiles(glob: \"target/*.${pom.packaging}\");\n  \
+          \                              // Extract the path from the File found\n\
+          \                                artifactPath = filesByGlob[0].path;\n \
+          \                               // Assign to a boolean response verifying\
+          \ If the artifact name exists\n                                artifactExists\
+          \ = fileExists artifactPath;\n        \n                               \
+          \ if(artifactExists) {\n                                    nexusPublisher\
+          \  nexusInstanceId: NEXUS_INSTANCE,\n                                  \
+          \                  nexusRepositoryId: NEXUS_REPOSITORY,\n              \
+          \                                      packages: [[$class: 'MavenPackage',\
+          \ mavenAssetList: [[classifier: '', extension: '', filePath: artifactPath]],\n\
+          \                                                    mavenCoordinate: [artifactId:\
+          \ pom.artifactId, groupId: pom.groupId, packaging: pom.packaging, version:\
+          \ pom.version]]];\n                                } else {\n          \
+          \                          error \"*** File: ${artifactPath}, could not\
+          \ be found\";\n                                }\n                     \
+          \       }\n                        }\n                    }\n          \
+          \      }\n                stage('Publish to Artifactory') {\n          \
+          \          when {\n                        expression {\n              \
+          \              params.artifactory == true\n                        }\n \
+          \                   }\n                    steps {\n                   \
+          \     container('maven') {\n                            script {\n     \
+          \                           pom = readMavenPom file: \"pom.xml\";\n    \
+          \                            filesByGlob = findFiles(glob: \"target/*.${pom.packaging}\"\
+          );\n                                // Extract the path from the File found\n\
+          \                                artifactPath = filesByGlob[0].path;\n \
+          \                               // Assign to a boolean response verifying\
+          \ If the artifact name exists\n                                artifactExists\
+          \ = fileExists artifactPath;\n                                \n       \
+          \                         rtMavenResolver (\n                          \
+          \          id: 'resolver-unique-id',\n                                 \
+          \   serverId: 'Artifactory-fgibelin',\n                                \
+          \    releaseRepo: 'maven',\n                                    snapshotRepo:\
+          \ 'maven',\n                                )\n                        \
+          \        rtMavenDeployer (\n                                    id: 'deployer-unique-id',\n\
+          \                                    serverId: 'Artifactory-fgibelin',\n\
+          \                                    releaseRepo: 'maven-local-releases',\n\
+          \                                    snapshotRepo: 'maven-local-snapshots',\n\
+          \                                )\n                                rtMavenRun\
+          \ (\n                                    // Tool name from Jenkins configuration.\n\
+          \                                    //tool: MAVEN_TOOL,\n             \
+          \                       // Set to true if you'd like the build to use the\
+          \ Maven Wrapper.\n                                    useWrapper: true,\n\
+          \                                    pom: 'pom.xml',\n                 \
+          \                   goals: 'deploy',\n                                 \
+          \   // Maven options.\n                                    //opts: '-Xms1024m\
+          \ -Xmx4096m',\n                                    resolverId: 'resolver-unique-id',\n\
+          \                                    deployerId: 'deployer-unique-id',\n\
+          \                                    // If the build name and build number\
+          \ are not set here, the current job name and number will be used:\n    \
+          \                                buildName: '${env.JOB_NAME}',\n       \
+          \                             buildNumber: '${currentBuild.number}',\n \
+          \                                   // Optional - Only if this build is\
+          \ associated with a project in Artifactory, set the project key as follows.\n\
+          \                                    project: 'spring-petclinic'\n     \
+          \                           )\n                            }\n         \
+          \               }\n                    }\n                }\n          \
+          \  }\n        }\n\n        stage('Update versions in CloudBees CD') {\n\
+          \            steps {\n                cloudBeesFlowRunProcedure configuration:\
+          \ 'CloudBees Guru CD',\n                                          procedureName:\
+          \ 'Import Petclinic versions from Nexus',\n                            \
+          \              projectName: 'Petclinic'\n            }\n        }\n    \
+          \    stage('Trigger CloudBees CD pipeline') {\n            steps {\n   \
+          \             cloudBeesFlowTriggerRelease configuration: 'CloudBees Guru\
+          \ CD',\n                                            parameters: '{\"release\"\
+          :{\"releaseName\":\"Petclinic - 2.6.0-SNAPSHOT\",\"stages\":[{\"stageName\"\
+          : \"Development\", \"stageValue\": true}, {\"stageName\": \"Integration\"\
+          , \"stageValue\": false}, {\"stageName\": \"PreProduction\", \"stageValue\"\
+          : false}, {\"stageName\": \"Production\", \"stageValue\": false}, {\"stageName\"\
+          : \"UAT\", \"stageValue\": false}],\"parameters\":[]}}',\n             \
+          \                               projectName: 'Petclinic',\n            \
+          \                                releaseName: 'Petclinic - 2.6.0-SNAPSHOT'\n\
+          \            }\n        }\n        stage('Feature flag usage check') {\n\
+          \            steps {\n                featureManagementConfig applicationIdAndName:\
+          \ \"${env.CBFM_PETCLINIC_APPID}::Petclinic\",\n                        \
+          \                credentialsId: 'CBFM-fgibelin',\n                     \
+          \                   environmentIdAndName: \"${env.CBFM_PETCLINIC_PRODUCTION}::Production\"\
+          \n            }\n        }\n    }\n\n    post {\n        always {\n    \
+          \        junit 'target/surefire-reports/**/*.xml'\n        }\n    }\n}"
+    description: ''
+    disabled: false
+    displayName: spring-petclinic-master-branch
+    properties:
+    - jiraProjectProperty: {}
+    - buildDiscarder:
+        strategy:
+          logRotator:
+            artifactDaysToKeep: -1
+            artifactNumToKeep: -1
+            daysToKeep: -1
+            numToKeep: 10
+    - parameters:
+        parameterDefinitions:
+        - booleanParam:
+            defaultValue: false
+            name: artifactory
+            description: Deploy to Artifactory
+    resumeBlocked: false
+  - kind: multibranch
+    name: spring-petclinic-multibranch
+    description: A sample Spring-based application
+    displayName: spring-petclinic-multibranch
+    healthMetrics:
+    - worstChildHealthMetric:
+        recursive: true
+    - averageChildHealthMetric: {}
+    - jobStatusHealthMetric:
+        unstable: true
+        countVirginJobs: false
+        failure: true
+        success: true
+        unbuilt: true
+    - projectEnabledHealthMetric: {}
+    orphanedItemStrategy:
+      defaultOrphanedItemStrategy:
+        pruneDeadBranches: true
+        daysToKeep: 10
+        numToKeep: -1
+        abortBuilds: false
+    projectFactory:
+      customBranchProjectFactory:
+        marker: pom.xml
+        definition:
+          cpsFlowDefinition:
+            sandbox: true
+            script: |-
+              pipeline {
+
+                options {
+                  buildDiscarder(logRotator(numToKeepStr: '10'))
+                  skipDefaultCheckout true
+                }
+
+                agent {
+                  kubernetes {
+                    yaml """
+              apiVersion: v1
+              kind: Pod
+              metadata:
+                labels:
+                  some-label: some-label-value
+              spec:
+                containers:
+                - name: maven
+                  image: maven:3.8.5-jdk-11-slim
+                  command:
+                  - cat
+                  tty: true
+                  volumeMounts:
+                    - name: cache
+                      mountPath: /tmp/cache
+                volumes:
+                  - name: cache
+                    hostPath:
+                      path: /tmp/cache
+              """
+                  }
+                }
+
+                environment {
+                  NEXUS_INSTANCE = "Nexus_CloudBees_Guru"
+                  NEXUS_REPOSITORY = "shared-demos"
+                  ROLLOUT_APP_TOKEN = "$ROLLOUT_APP_TOKEN"
+                  ROLLOUT_USER_TOKEN = "$ROLLOUT_USER_TOKEN"
+                }
+
+                stages {
+                  stage('Run maven') {
+                    steps {
+                        checkout scm
+                        container('maven') {
+                          withMaven(
+                                    mavenSettingsConfig: '4123d3ce-22c2-477d-83d7-623049473250',
+                                    options: [junitPublisher(disabled: true, healthScaleFactor: 1.0)],
+                                    publisherStrategy: 'EXPLICIT') {
+                            sh 'mvn clean verify'
+                          }
+                        }
+                    }
+                  }
+                  stage('SonarQube analysis') {
+                    steps {
+                        container('maven') {
+                          withSonarQubeEnv('SonarQube CloudBees Guru') {
+                            withMaven(
+                                      mavenSettingsConfig: '4123d3ce-22c2-477d-83d7-623049473250',
+                                      options: [junitPublisher(disabled: true, healthScaleFactor: 1.0)],
+                                      publisherStrategy: 'EXPLICIT') {
+                              sh 'mvn sonar:sonar'
+                            }
+                          }
+                          publishChecks name: 'Test', text: 'I am happy with these results', title: 'Yoohoo'
+                        }
+                    }
+                  }
+                  stage('Publish to Nexus') {
+                    steps {
+                        container('maven') {
+                          script {
+                            pom = readMavenPom file: "pom.xml";
+                            filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                            // Extract the path from the File found
+                            artifactPath = filesByGlob[0].path;
+                            // Assign to a boolean response verifying If the artifact name exists
+                            artifactExists = fileExists artifactPath;
+
+                            if(artifactExists) {
+                              nexusPublisher  nexusInstanceId: NEXUS_INSTANCE,
+                                              nexusRepositoryId: NEXUS_REPOSITORY,
+                                              packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: '', filePath: artifactPath]],
+                                              mavenCoordinate: [artifactId: pom.artifactId, groupId: pom.groupId, packaging: pom.packaging, version: pom.version]]];
+                             } else {
+                               error "*** File: ${artifactPath}, could not be found";
+                             }
+                          }
+                        }
+                    }
+                  }
+                  stage('Update versions in CloudBees CD') {
+                      steps {
+                          cloudBeesFlowRunProcedure configuration: 'CloudBees Guru CD',
+                                                    procedureName: 'Import Petclinic versions from Nexus',
+                                                    projectName: 'Petclinic'
+                      }
+                  }
+                  stage('Feature flag usage check') {
+                    steps {
+                        container('maven') {
+                          script {
+                            sh """
+                             curl -o file.json \"https://x-api.rollout.io/public-api/applications/${ROLLOUT_APP_TOKEN}/Production/experiments" -H "accept: application/json" -H "Authorization: Bearer ${ROLLOUT_USER_TOKEN}"''
+                             cat file.json | sed -e 's/},/},\\n/g' > file.json.new
+                            """
+                            ALLEXP = sh (
+                                script: 'cat file.json.new | grep value | wc -l',
+                                returnStdout: true
+                            ).trim()
+                            echo "All experiments: ${ALLEXP}"
+                            KILLEDEXP = sh (
+                                script: 'cat file.json.new | grep enabled.*false | wc -l',
+                                returnStdout: true
+                            ).trim()
+                            echo "Inactive experiments: ${KILLEDEXP}"
+                          }
+                        }
+                    }
+                  }
+                  stage('Trigger CloudBees CD pipeline') {
+                      steps {
+                          cloudBeesFlowTriggerRelease configuration: 'CloudBees Guru CD',
+                                                      parameters: '{"release":{"releaseName":"Petclinic - 2.7.0-SNAPSHOT","stages":"[{\\"stageName\\": \\"Development\\", \\"stageValue\\": true}, {\\"stageName\\": \\"Integration\\", \\"stageValue\\": false}, {\\"stageName\\": \\"PreProduction\\", \\"stageValue\\": false}, {\\"stageName\\": \\"Production\\", \\"stageValue\\": false}, {\\"stageName\\": \\"UAT\\", \\"stageValue\\": false}]","parameters":"[]"}}',
+                                                      projectName: 'Petclinic',
+                                                      releaseName: 'Petclinic - 2.7.0-SNAPSHOT',
+                                                      startingStage: 'Development'
+                      }
+                  }
+                }
+
+                post {
+                  always {
+                    junit 'target/surefire-reports/**/*.xml'
+                  }
+                }
+              }
+    sourcesList:
+    - branchSource:
+        source:
+          github:
+            apiUri: https://api.github.com
+            traits:
+            - gitHubBranchDiscovery:
+                strategyId: 1
+            - gitHubPullRequestDiscovery:
+                strategyId: 1
+            - gitHubForkDiscovery:
+                trust:
+                  gitHubTrustPermissions: {}
+                strategyId: 1
+            - cloudBeesSCMReporting:
+                visibleLinesOnly: false
+                handlers:
+                - pipelinePolicies: {}
+                - endBuildError:
+                    maxLogLines: 100
+                - stage:
+                    verbosity:
+                      all: {}
+                - junit: {}
+            repoOwner: cloudbees-guru
+            credentialsId: 4d43fb96-4b6a-4fca-976f-ed294f46bae0
+            id: d60b7601-0f22-4c96-821f-bd4165fdc427
+            repository: spring-petclinic
+            configuredByUrl: true
+            repositoryUrl: https://github.com/cloudbees-guru/spring-petclinic/
+        strategy:
+          allBranchesSame: {}
+  properties:
+  - pipeline-model-docker:
+      registry:
+        dockerRegistryEndpoint: {}
+      dockerLabel: ''
+  - envVars:
+      vars:
+        CBFM_PETCLINIC_PRODUCTION: 615c016ca7889d07157333b0
+        CBFM_PETCLINIC_APPID: 615c016ca7889d30e27333ad
+  - kubernetes: {}
+  - mavenConfigFolderOverrideProperty:
+      override: false
+  - itemRestrictions:
+      allowedTypes:
+      - org.jenkinsci.plugins.workflow.job.WorkflowJob
+      - org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject
+      filter: true
