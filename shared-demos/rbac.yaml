@@ -148,7 +148,6 @@ roles:
   name: develop
 - filterable: 'true'
   permissions:
-  - hudson.model.Item.Read
   - hudson.model.Item.Discover
   - hudson.model.Hudson.Read
   name: browse
