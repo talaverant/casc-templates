@@ -1,0 +1,8 @@
+type: "plugin-catalog"
+version: "1" 
+name: "my-plugin-catalog"
+displayName: "My Plugin Catalog"
+configurations:
+  - description: "Extensions to CAP"
+
+     

@@ -1,0 +1,19 @@
+removeStrategy:
+  rbac: SYNC
+  items: NONE
+items:
+- concurrentBuild: false
+  builders:
+  - shell:
+      command: echo "Hello World"
+  blockBuildWhenUpstreamBuilding: false
+  blockBuildWhenDownstreamBuilding: false
+  kind: freeStyle
+  displayName: test
+  name: test
+  description: ''
+  disabled: false
+  scm:
+    none: {}
+  scmCheckoutStrategy:
+    standard: {}
